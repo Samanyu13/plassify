@@ -16,8 +16,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:label="Individual"
+            android:name=".IndividualPeople"
+            android:parentActivityName=".PeoplePage">
+        </activity>
+        <activity
+            android:label="People"
+            android:name=".PeoplePage"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
+            android:label="TestPage"
+            android:name=".Activity2" >
+        </activity>
     </application>
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 </manifest>
