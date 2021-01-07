@@ -1,14 +1,18 @@
-package com.s13.codify;
+package com.s13.codify.Activities;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.s13.codify.Models.People;
+import com.s13.codify.Adapters.PeopleAdapter;
+import com.s13.codify.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class PeoplePage extends AppCompatActivity {
+public class PeopleActivity extends AppCompatActivity {
 
     List<People> lstBook ;
 

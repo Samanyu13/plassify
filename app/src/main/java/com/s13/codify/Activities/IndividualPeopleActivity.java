@@ -1,4 +1,4 @@
-package com.s13.codify;
+package com.s13.codify.Activities;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class IndividualPeople extends AppCompatActivity {
+import com.s13.codify.R;
+
+public class IndividualPeopleActivity extends AppCompatActivity {
 
     private TextView iTitle, iDescription;
     private ImageView iImg;
@@ -20,7 +22,7 @@ public class IndividualPeople extends AppCompatActivity {
         iDescription = (TextView) findViewById(R.id.txtDesc);
         iImg = (ImageView) findViewById(R.id.bookthumbnail);
 
-        // Recieve data
+        // Receive data
         Intent intent = getIntent();
         String Title = intent.getExtras().getString("Title");
         String Description = intent.getExtras().getString("Description");

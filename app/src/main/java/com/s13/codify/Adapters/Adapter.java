@@ -1,4 +1,4 @@
-package com.s13.codify;
+package com.s13.codify.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.s13.codify.Activities.PeopleActivity;
+import com.s13.codify.R;
 
 import java.util.List;
 
@@ -60,7 +62,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
 //                    context = v.getContext();
-                    Intent intent = new Intent(context, PeoplePage.class);
+                    Intent intent = new Intent(context, PeopleActivity.class);
                     context.startActivity(intent);
                 }
             });

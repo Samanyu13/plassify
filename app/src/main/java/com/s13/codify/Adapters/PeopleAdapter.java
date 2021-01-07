@@ -1,4 +1,4 @@
-package com.s13.codify;
+package com.s13.codify.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.s13.codify.Activities.ImagesDisplayActivity;
+import com.s13.codify.Activities.IndividualPeopleActivity;
+import com.s13.codify.Models.People;
+import com.s13.codify.R;
 
 import java.util.List;
 
@@ -41,9 +46,9 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.MyViewHold
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(mContext,IndividualPeople.class);
+                Intent intent = new Intent(mContext, ImagesDisplayActivity.class);
 
-                // passing data to the book activity
+                // passing data to the activity
                 intent.putExtra("Title",mData.get(position).getTitle());
                 intent.putExtra("Description",mData.get(position).getDescription());
                 intent.putExtra("Thumbnail",mData.get(position).getThumbnail());

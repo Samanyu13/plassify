@@ -1,4 +1,4 @@
-package com.s13.codify;
+package com.s13.codify.Models;
 
 public class People {
 

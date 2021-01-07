@@ -1,8 +1,10 @@
-package com.s13.codify;
+package com.s13.codify.Activities;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Button;
+
+import com.s13.codify.R;
 
 public class Activity2 extends Activity {
 

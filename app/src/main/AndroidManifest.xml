@@ -18,17 +18,21 @@
         </activity>
         <activity
             android:label="Individual"
-            android:name=".IndividualPeople"
-            android:parentActivityName=".PeoplePage">
+            android:name=".Activities.IndividualPeopleActivity"
+            android:parentActivityName=".Activities.PeopleActivity">
         </activity>
         <activity
             android:label="People"
-            android:name=".PeoplePage"
+            android:name=".Activities.PeopleActivity"
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
             android:label="TestPage"
-            android:name=".Activity2" >
+            android:name=".Activities.Activity2" >
+        </activity>
+        <activity
+            android:label="TestPage"
+            android:name=".Activities.ImagesDisplayActivity" >
         </activity>
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>

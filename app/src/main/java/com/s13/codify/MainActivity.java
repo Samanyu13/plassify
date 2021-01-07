@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
+import com.s13.codify.Adapters.Adapter;
+import com.s13.codify.Models.ModelClasses;
+
 import java.util.ArrayList;
 import java.util.List;
 
