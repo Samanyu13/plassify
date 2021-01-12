@@ -30,16 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i = 0; i < (ModelClasses.MODEL_CLASSES).length; i++) {
             titles.add(ModelClasses.MODEL_CLASSES[i]);
+            images.add(R.drawable.ic_baseline_folder_24);
         }
-
-        images.add(R.drawable.ic_baseline_folder_24);
-        images.add(R.drawable.ic_baseline_folder_24);
-        images.add(R.drawable.ic_baseline_folder_24);
-        images.add(R.drawable.ic_baseline_folder_24);
-        images.add(R.drawable.ic_baseline_folder_24);
-        images.add(R.drawable.ic_baseline_folder_24);
-        images.add(R.drawable.ic_baseline_folder_24);
-        images.add(R.drawable.ic_baseline_folder_24);
 
         adapter = new Adapter(this,titles,images);
 
