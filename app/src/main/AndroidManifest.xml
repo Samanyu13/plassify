@@ -34,7 +34,15 @@
             android:label="TestPage"
             android:name=".Activities.ImagesDisplayActivity" >
         </activity>
+        <service
+            android:name=".services.ImageFinder"
+            android:label="Image Finder service">
+        </service>
+        <service
+            android:name=".services.ImageFinderScheduler"
+            android:label="Image Finder Scheduler service"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+        </service>
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
 </manifest>

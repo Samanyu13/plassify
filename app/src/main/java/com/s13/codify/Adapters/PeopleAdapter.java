@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.s13.codify.Activities.ImagesDisplayActivity;
-import com.s13.codify.Activities.IndividualPeopleActivity;
 import com.s13.codify.Models.People;
 import com.s13.codify.R;
 
@@ -45,7 +44,6 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.MyViewHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(mContext, ImagesDisplayActivity.class);
 
                 // passing data to the activity

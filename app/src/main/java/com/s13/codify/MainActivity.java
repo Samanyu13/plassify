@@ -4,10 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
 
 import com.s13.codify.Adapters.Adapter;
 import com.s13.codify.Models.ModelClasses;
+import com.s13.codify.services.ImageFinderScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,5 +43,17 @@ public class MainActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
         dataList.setLayoutManager(gridLayoutManager);
         dataList.setAdapter(adapter);
+
+        runImageFinder(this);
+    }
+
+    private void runImageFinder(Context context){
+        // This runs the job in the main thread. TODO: Implement Asynchronocity
+        ComponentName serviceComponent = new ComponentName(context, ImageFinderScheduler.class);
+        JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
+        builder.setMinimumLatency(1 * 1000); // wait at least
+        builder.setOverrideDeadline(2 * 1000); // maximum delay
+        JobScheduler jobScheduler = (JobScheduler)context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(builder.build());
     }
 }
