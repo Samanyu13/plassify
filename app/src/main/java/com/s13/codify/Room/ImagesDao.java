@@ -17,26 +17,26 @@ public interface ImagesDao {
     @Query("DELETE FROM Images")
     void deleteAll();
 
-    @Query("DELETE FROM Images WHERE imageStatus = :queryStatus")
+    @Query("DELETE FROM Images WHERE image_status = :queryStatus")
     void deleteByStatus(String queryStatus);
 
-    @Query("DELETE FROM Images WHERE imagePath = :imagePathString")
+    @Query("DELETE FROM Images WHERE image_path = :imagePathString")
     void deleteByImagePath(String imagePathString);
 
-    @Query("SELECT * from Images WHERE imageStatus = :queryText LIMIT 5")
+    @Query("SELECT * from Images WHERE image_status = :queryText LIMIT 5")
     LiveData<List<Images>> getImageListByImageStatus(String queryText);
 
-    @Query("SELECT * from Images WHERE imageStatus != :queryText ")
+    @Query("SELECT * from Images WHERE image_status != :queryText ")
     LiveData<List<Images>> getImageListByNotImageStatus(String queryText);
 
-    @Query("SELECT * from Images WHERE imageStatus = :queryText LIMIT 100")
+    @Query("SELECT * from Images WHERE image_status = :queryText LIMIT 100")
     List<Images> getImageListByImageStatusNotCheck(String queryText);
 
 
-    @Query("SELECT * from Images WHERE imagePath IN (:queryList)")
+    @Query("SELECT * from Images WHERE image_path IN (:queryList)")
     List<Images> getImageDataByImagePath(List<String> queryList);
 
-    @Query("SELECT COUNT(imagePath) FROM Images")
+    @Query("SELECT COUNT(image_path) FROM Images")
     int getRowCount();
 
 

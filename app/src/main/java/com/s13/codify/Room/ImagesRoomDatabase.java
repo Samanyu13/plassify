@@ -7,11 +7,13 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 //import com.example.memedetection.Repository.ImageRepo;
 
 @Database(entities = {Images.class}, version = 1, exportSchema=true)
+@TypeConverters({Converters.class})
 public abstract class ImagesRoomDatabase extends RoomDatabase {
 
     private static volatile ImagesRoomDatabase INSTANCE;
