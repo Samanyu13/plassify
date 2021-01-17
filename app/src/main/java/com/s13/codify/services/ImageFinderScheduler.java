@@ -13,6 +13,8 @@ import androidx.annotation.RequiresApi;
 
 public class ImageFinderScheduler extends JobService {
     private static final String TAG = "SyncService";
+    public static final int SECONDS = 1000;
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public boolean onStartJob(JobParameters params) {
@@ -21,8 +23,8 @@ public class ImageFinderScheduler extends JobService {
         context.startService(service);
         ComponentName serviceComponent = new ComponentName(this, ImageFinderScheduler.class);
         Builder builder = new Builder(0, serviceComponent);
-        builder.setMinimumLatency(1 * 1000); // wait at least
-        builder.setOverrideDeadline(2 * 1000); // maximum delay
+        builder.setMinimumLatency(60 * SECONDS); // wait at least
+        builder.setOverrideDeadline(60 * SECONDS); // maximum delay
         JobScheduler jobScheduler = (JobScheduler)context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(builder.build());
         return false;
