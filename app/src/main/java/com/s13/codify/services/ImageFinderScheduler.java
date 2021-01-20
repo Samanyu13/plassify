@@ -18,14 +18,23 @@ public class ImageFinderScheduler extends JobService {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public boolean onStartJob(JobParameters params) {
+        //Schedule finder
         Context context = getApplicationContext();
-        Intent service = new Intent(getApplicationContext(), ImageFinder.class);
-        context.startService(service);
+        Intent imageFinder = new Intent(getApplicationContext(), ImageFinder.class);
+        context.startService(imageFinder);
         ComponentName serviceComponent = new ComponentName(this, ImageFinderScheduler.class);
         Builder builder = new Builder(0, serviceComponent);
-        builder.setMinimumLatency(60 * SECONDS); // wait at least
-        builder.setOverrideDeadline(60 * SECONDS); // maximum delay
+        builder.setPeriodic(10 * SECONDS);
         JobScheduler jobScheduler = (JobScheduler)context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(builder.build());
+
+        // Schedule classifier
+        Intent imageClassifier = new Intent(getApplicationContext(), ImageClassifier.class);
+        context.startService(imageClassifier);
+        serviceComponent = new ComponentName(this, ImageFinderScheduler.class);
+        builder = new Builder(0, serviceComponent);
+        builder.setPeriodic(40 * SECONDS);
+        jobScheduler = (JobScheduler)context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(builder.build());
         return false;
     }

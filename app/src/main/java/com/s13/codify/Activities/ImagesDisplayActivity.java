@@ -39,15 +39,8 @@ public class ImagesDisplayActivity extends AppCompatActivity {
 
         gallery_number = findViewById(R.id.gallery_number);
         recyclerView = findViewById(R.id.recyclerview_gallery_images);
+        loadImages();
 
-        //Check permission
-        if(ContextCompat.checkSelfPermission(ImagesDisplayActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ImagesDisplayActivity.this,
-                    new String[]{READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
-        } else {
-            loadImages();
-        }
     }
 
     private void loadImages() {

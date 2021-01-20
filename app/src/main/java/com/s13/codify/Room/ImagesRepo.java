@@ -63,7 +63,9 @@ public class ImagesRepo {
 //        mImageDao.deleteByStatus(status);
     }
 
-
+    public void updateLabelByImagePath(String imagePath, String label){
+        imagesDao.updateImageLabelByImagePath(imagePath,label);
+    }
 
     public int getRowCount() {
         return imagesDao.getRowCount();

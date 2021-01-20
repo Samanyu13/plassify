@@ -36,6 +36,9 @@ public interface ImagesDao {
     @Query("SELECT * from Images WHERE image_path IN (:queryList)")
     List<Images> getImageDataByImagePath(List<String> queryList);
 
+    @Query("UPDATE Images SET image_status=(:label) where image_path = (:imagePath)")
+    void updateImageLabelByImagePath(String imagePath, String label);
+
     @Query("SELECT COUNT(image_path) FROM Images")
     int getRowCount();
 

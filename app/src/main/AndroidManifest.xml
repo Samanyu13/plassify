@@ -39,6 +39,10 @@
             android:label="Image Finder service">
         </service>
         <service
+            android:name=".services.ImageClassifier"
+            android:label="Image Classifier service">
+        </service>
+        <service
             android:name=".services.ImageFinderScheduler"
             android:label="Image Finder Scheduler service"
             android:permission="android.permission.BIND_JOB_SERVICE" >

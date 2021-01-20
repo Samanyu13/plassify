@@ -1,15 +1,20 @@
 package com.s13.codify;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.s13.codify.Activities.ImagesDisplayActivity;
 import com.s13.codify.Adapters.Adapter;
 import com.s13.codify.Models.ModelClasses;
 import com.s13.codify.services.ImageFinderScheduler;
@@ -17,16 +22,24 @@ import com.s13.codify.services.ImageFinderScheduler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+
 public class MainActivity extends AppCompatActivity {
     RecyclerView dataList;
     List<String> titles;
     List<Integer> images;
     Adapter adapter;
-
+    private static final int MY_READ_PERMISSION_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Check permission
+        if(ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
+        }
         setContentView(R.layout.activity_main);
         dataList = findViewById(R.id.dataList);
 
@@ -45,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         dataList.setAdapter(adapter);
 
         runImageFinder(this);
+
     }
 
     private void runImageFinder(Context context){
