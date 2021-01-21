@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "293436062787",
+    "project_id": "plassify",
+    "storage_bucket": "plassify.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293436062787:android:4dc7aac228bc310a63a8f6",
+        "android_client_info": {
+          "package_name": "com.s13.plassify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293436062787-p4g07fgl9hp22haqnuujm81q4d53lt21.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXyA1Z2Dksj6oHJRqneAZddS8bNrAIHNg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293436062787-p4g07fgl9hp22haqnuujm81q4d53lt21.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

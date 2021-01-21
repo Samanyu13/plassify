@@ -8,6 +8,7 @@ public final class Constants {
     public static final String PERIODIC_TASK = "PERIODIC_TASK";
 
     public static final String IMAGE_STATUS_NOT_CHECKED = "not_checked";
+    public static final int MAX_RESULTS = 1;
     public static final String IMAGE_STATUS_MEME = "Meme";
     public static final String IMAGE_STATUS_NOT_MEME = "Not Meme";
     public static final String IMAGE_STATUS_CHECKED_DEL = "Delete";

@@ -14,6 +14,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
+import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import com.s13.codify.Activities.ImagesDisplayActivity;
 import com.s13.codify.Adapters.Adapter;
 import com.s13.codify.Models.ModelClasses;
@@ -40,6 +44,20 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
         }
+
+        FirebaseCustomRemoteModel remoteModel =
+                new FirebaseCustomRemoteModel.Builder("Image-classifier").build();
+        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
+                .requireWifi()
+                .build();
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void v) {
+                        System.out.println(remoteModel.toString() + "LAALEDE ORU KARYAM");
+                    }
+                });
+
         setContentView(R.layout.activity_main);
         dataList = findViewById(R.id.dataList);
 
