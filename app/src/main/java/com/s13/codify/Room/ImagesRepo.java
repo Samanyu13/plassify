@@ -19,24 +19,21 @@ public class ImagesRepo {
 
     private ImagesDao imagesDao;
     private LiveData<List<Images>> allImagesByImageStatus;
-
+    private LiveData<List<String>> allImagesPathByImageStatus;
 
 
     public ImagesRepo(Application application) {
         ImagesRoomDatabase db = ImagesRoomDatabase.getDatabase(application);
         imagesDao = db.imagesDao();
-//        allNotCheckedImages = imagesDao.getNotCheckedImageList("not_checked");
-
     }
 
     public List<Images> getAllImagesByImagesList(List<String> imagePathList) {
         return imagesDao.getImageDataByImagePath(imagePathList);
     }
 
-    public LiveData<List<Images>> getAllImagesByImageStatus(String queryStatus) {
-        allImagesByImageStatus = imagesDao.getImageListByImageStatus(queryStatus);
-
-        return allImagesByImageStatus;
+    public LiveData<List<String>> getAllImagesByImageStatus(String queryStatus) {
+        allImagesPathByImageStatus = imagesDao.getImageListByImageStatus(queryStatus);
+        return allImagesPathByImageStatus;
     }
 
     public LiveData<List<Images>> getAllImagesExceptQueryStatus(String queryStatus) {

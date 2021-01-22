@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.s13.codify.Activities.ImagesDisplayActivity;
 import com.s13.codify.Activities.PeopleActivity;
 import com.s13.codify.R;
 
@@ -62,7 +63,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
 //                    context = v.getContext();
-                    Intent intent = new Intent(context, PeopleActivity.class);
+                    Intent intent = new Intent(context, ImagesDisplayActivity.class);
+                    intent.putExtra("MODELCLASS",title.getText());
                     context.startActivity(intent);
                 }
             });

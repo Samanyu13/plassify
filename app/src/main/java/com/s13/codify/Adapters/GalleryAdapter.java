@@ -52,7 +52,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewGall
 
     @Override
     public int getItemCount() {
-        return images.size();
+        return images != null ? images.size() : 0;
     }
 
     public class ViewGalleryHolder extends RecyclerView.ViewHolder {
@@ -69,5 +69,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewGall
 
     public interface PhotoListener {
         void onPhotoClick(String path);
+    }
+
+    public void setImages(List<String> images){
+        this.images = images;
     }
 }
