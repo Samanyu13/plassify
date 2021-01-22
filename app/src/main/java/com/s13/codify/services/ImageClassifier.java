@@ -56,37 +56,36 @@ public class ImageClassifier extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
-        Context context = getApplicationContext();
-        ImagesRoomDatabase db = ImagesRoomDatabase.getDatabase(context);
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-
-                FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("Image-classifier").build();
-                FirebaseModelManager.getInstance().getLatestModelFile(remoteModel)
-                        .addOnCompleteListener(new OnCompleteListener<File>() {
-                            @Override
-                            public void onComplete(@NonNull Task<File> task) {
-                                File modelFile = task.getResult();
-                                if (modelFile != null) {
+        FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("Image-classifier").build();
+        FirebaseModelManager.getInstance().getLatestModelFile(remoteModel)
+                .addOnCompleteListener(new OnCompleteListener<File>() {
+                    @Override
+                    public void onComplete(@NonNull Task<File> task) {
+                        File modelFile = task.getResult();
+                        if (modelFile != null) {
+                            ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
+                            Context context = getApplicationContext();
+                            ImagesRoomDatabase db = ImagesRoomDatabase.getDatabase(context);
+                            executorService.execute(new Runnable() {
+                                @Override
+                                public void run() {
                                     Interpreter interpreter = new Interpreter(modelFile);
-
                                     List<Images> images = db.imagesDao().getImageListByImageStatusNotCheck(IMAGE_STATUS_NOT_CHECKED);
                                     for (Images image : images) {
                                         String imagePath = image.getImagePath();
                                         System.out.println("Classifying image.....");
                                         String label = classify(imagePath, interpreter);
                                         System.out.println("Classification complete !");
-                                        db.imagesDao().updateImageLabelByImagePath(imagePath,label);
+                                        db.imagesDao().updateImageLabelByImagePath(imagePath, label);
                                     }
                                 }
-                            }
-                        });
-            }
-        });
+                            });
+                        }
+                    }
+                });
         return Service.START_NOT_STICKY;
     }
+
 
     /** An immutable result returned by a Classifier describing what was recognized. */
     public static class Recognition {
