@@ -6,7 +6,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-
+import java.util.Date;
 //import com.example.memedetection.Room.ImageDao;
 //import com.example.memedetection.Room.ImageRoomDataset;
 //import com.example.memedetection.Room.Images;
@@ -64,7 +64,8 @@ public class ImagesRepo {
     }
 
     public void updateLabelByImagePath(String imagePath, String label){
-        imagesDao.updateImageLabelByImagePath(imagePath,label);
+        Date lastClassifiedTimestamp = new Date();
+        imagesDao.updateImageLabelByImagePath(imagePath,label,lastClassifiedTimestamp);
     }
 
     public int getRowCount() {

@@ -26,48 +26,79 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static com.s13.codify.Utils.Constants.IMAGE_STATUS_NOT_CHECKED;
 
 public class ImageFinder extends Service {
 
     public static final int N_THREADS = 5;
+    private static boolean isRunning;
+
+    @Override
+    public void onCreate(){
+        super.onCreate();
+        isRunning = false;
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("SCHEDULER SAYS HELLO SOMA !");
-                int column_index_data;
-                String absolutePathOfImage;
+        if(!isRunning) {
+            ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    isRunning = true;
+                    Cursor cursor = null;
+                    try {
 
-                Context context = getApplicationContext();
-                ImagesRoomDatabase db = ImagesRoomDatabase.getDatabase(context);
+                        int column_index_data;
+                        String absolutePathOfImage;
 
-                Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                        Context context = getApplicationContext();
+                        ImagesRoomDatabase db = ImagesRoomDatabase.getDatabase(context);
 
-                String[] projection = {MediaStore.MediaColumns.DATA};
+                        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
-                String orderBy = MediaStore.Video.Media.DATE_TAKEN;
-                Cursor cursor = context.getContentResolver().query(uri, projection, null,
-                        null, orderBy+" DESC");
-                column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                        Date lastClassifiedTime = db.imagesDao().getLastClassifiedTimestamp();
+                        String[] projection = {
+                                MediaStore.MediaColumns.DATA,
+                                MediaStore.Images.Media.DISPLAY_NAME,
+                                MediaStore.Images.Media.DATE_MODIFIED
+                        };
+                        String selection = new String();
+                        String[] selectionArgs = new String[1];
+                        if (lastClassifiedTime == null) {
+                            selectionArgs = null;
+                            selection = null;
+                        } else {
+                            selection = "date_modified >= ?";
+                            selectionArgs[0] = String.valueOf(dateToTimestamp(lastClassifiedTime));
+                        }
+                        String orderBy = "date_modified DESC";
+                        cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, orderBy);
+                        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                        String[] count = cursor.getColumnNames();
+                        while (cursor.moveToNext()) {
+                            absolutePathOfImage = cursor.getString(column_index_data);
+                            Images image = new Images(absolutePathOfImage, IMAGE_STATUS_NOT_CHECKED);
+                            System.out.println("Inserting image");
+                            db.imagesDao().insert(image);
+                        }
+                    } catch (Exception e) {
 
-                while (cursor.moveToNext()) {
-                    absolutePathOfImage = cursor.getString(column_index_data);
-                    Images image = new Images(absolutePathOfImage,IMAGE_STATUS_NOT_CHECKED);
-                    System.out.println("Inserting image");
-                    db.imagesDao().insert(image);
+                    } finally {
+                        cursor.close();
+                    }
+                    isRunning = false;
                 }
-
-            }
-        });
-
+            });
+        }
         return Service.START_NOT_STICKY;
     }
 
@@ -76,5 +107,9 @@ public class ImageFinder extends Service {
         return null;
     }
 
+    public long dateToTimestamp(Date date){
+        TimeUnit t = TimeUnit.MILLISECONDS;
+        return t.toSeconds(date == null ? 0L: date.getTime());
+    }
 
 }

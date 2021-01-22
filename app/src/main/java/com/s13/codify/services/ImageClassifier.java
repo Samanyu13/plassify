@@ -40,6 +40,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -53,36 +54,47 @@ import static org.checkerframework.checker.units.UnitsTools.min;
 
 public class ImageClassifier extends Service {
     public static final int N_THREADS = 5;
-
+    public static boolean isRunning;
+    @Override
+    public void onCreate(){
+        super.onCreate();
+        isRunning = false;
+    }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("Image-classifier").build();
-        FirebaseModelManager.getInstance().getLatestModelFile(remoteModel)
-                .addOnCompleteListener(new OnCompleteListener<File>() {
-                    @Override
-                    public void onComplete(@NonNull Task<File> task) {
-                        File modelFile = task.getResult();
-                        if (modelFile != null) {
-                            ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
-                            Context context = getApplicationContext();
-                            ImagesRoomDatabase db = ImagesRoomDatabase.getDatabase(context);
-                            executorService.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Interpreter interpreter = new Interpreter(modelFile);
-                                    List<Images> images = db.imagesDao().getImageListByImageStatusNotCheck(IMAGE_STATUS_NOT_CHECKED);
-                                    for (Images image : images) {
-                                        String imagePath = image.getImagePath();
-                                        System.out.println("Classifying image.....");
-                                        String label = classify(imagePath, interpreter);
-                                        System.out.println("Classification complete !");
-                                        db.imagesDao().updateImageLabelByImagePath(imagePath, label);
+        if (!isRunning) {
+
+            FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("Image-classifier").build();
+            FirebaseModelManager.getInstance().getLatestModelFile(remoteModel)
+                    .addOnCompleteListener(new OnCompleteListener<File>() {
+                        @Override
+                        public void onComplete(@NonNull Task<File> task) {
+                            File modelFile = task.getResult();
+                            if (modelFile != null) {
+                                ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
+                                Context context = getApplicationContext();
+                                ImagesRoomDatabase db = ImagesRoomDatabase.getDatabase(context);
+                                executorService.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        isRunning = true;
+                                        Interpreter interpreter = new Interpreter(modelFile);
+                                        List<Images> images = db.imagesDao().getImageListByImageStatusNotCheck(IMAGE_STATUS_NOT_CHECKED);
+                                        for (Images image : images) {
+                                            String imagePath = image.getImagePath();
+                                            System.out.println("Classifying image.....");
+                                            String label = classify(imagePath, interpreter);
+                                            System.out.println("Classification complete !");
+                                            Date lastClassifiedTimestamp = new Date();
+                                            db.imagesDao().updateImageLabelByImagePath(imagePath, label, lastClassifiedTimestamp);
+                                        }
+                                        isRunning = false;
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+        }
         return Service.START_NOT_STICKY;
     }
 

@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Check permission
+        runImageFinder(this);
         if(ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this,
@@ -75,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
         dataList.setLayoutManager(gridLayoutManager);
         dataList.setAdapter(adapter);
 
-        runImageFinder(this);
+
 
     }
 
     private void runImageFinder(Context context){
-        // This runs the job in the main thread. TODO: Implement Asynchronocity
+        // This runs the job in the main thread.
         ComponentName serviceComponent = new ComponentName(context, ImageFinderScheduler.class);
         JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
         builder.setMinimumLatency(1 * 1000); // wait at least

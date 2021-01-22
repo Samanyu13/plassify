@@ -6,12 +6,13 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
 public interface ImagesDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Images image);
 
     @Query("DELETE FROM Images")
@@ -36,11 +37,12 @@ public interface ImagesDao {
     @Query("SELECT * from Images WHERE image_path IN (:queryList)")
     List<Images> getImageDataByImagePath(List<String> queryList);
 
-    @Query("UPDATE Images SET image_status=(:label) where image_path = (:imagePath)")
-    void updateImageLabelByImagePath(String imagePath, String label);
+    @Query("UPDATE Images SET image_status=:label, last_classified_timestamp= :lastModifiedTimestamp where image_path = :imagePath")
+    void updateImageLabelByImagePath(String imagePath, String label, Date lastModifiedTimestamp);
 
     @Query("SELECT COUNT(image_path) FROM Images")
     int getRowCount();
 
-
+    @Query("SELECT last_classified_timestamp FROM IMAGES ORDER BY last_classified_timestamp DESC LIMIT 1")
+    Date getLastClassifiedTimestamp();
 }

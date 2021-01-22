@@ -2,7 +2,8 @@ plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
 }
-  // Google Services plugin
+
+// Google Services plugin
 
 android {
     compileSdkVersion 29
@@ -31,6 +32,10 @@ android {
     ndkVersion '22.0.7026061'
     buildFeatures {
         mlModelBinding true
+    }
+    aaptOptions {
+        noCompress "tflite"
+        noCompress "pb"
     }
 }
 
@@ -75,4 +80,8 @@ dependencies {
     // Also declare the dependency for the TensorFlow Lite library and specify its version
     implementation 'org.tensorflow:tensorflow-lite:2.3.0'
 
+
+}
+repositories {
+    mavenCentral()
 }
