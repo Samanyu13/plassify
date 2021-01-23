@@ -25,10 +25,10 @@ public interface ImagesDao {
     void deleteByImagePath(String imagePathString);
 
     @Query("SELECT image_path from Images WHERE image_status = :queryText")
-    LiveData<List<String>> getImageListByImageStatus(String queryText);
+    List<String> getImageListByImageStatus(String queryText);
 
     @Query("SELECT * from Images WHERE image_status != :queryText ")
-    LiveData<List<Images>> getImageListByNotImageStatus(String queryText);
+    List<Images> getImageListByNotImageStatus(String queryText);
 
     @Query("SELECT * from Images WHERE image_status = :queryText LIMIT 100")
     List<Images> getImageListByImageStatusNotCheck(String queryText);

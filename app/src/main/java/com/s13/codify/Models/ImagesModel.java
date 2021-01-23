@@ -16,7 +16,7 @@ public class ImagesModel extends AndroidViewModel {
 
     private ImagesRepo imageRepository;
 
-    private LiveData<List<String>> images;
+    private List<String> images;
 
     public ImagesModel (Application application) {
         super(application);
@@ -24,7 +24,7 @@ public class ImagesModel extends AndroidViewModel {
         images = imageRepository.getAllImagesByImageStatus(IMAGE_STATUS_MEME);
     }
 
-    LiveData<List<String>> getAllImages() { return images; }
+    List<String> getAllImages() { return images; }
 
     public void insert(Images image) { imageRepository.insert(image); }
 }

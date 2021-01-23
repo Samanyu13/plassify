@@ -18,8 +18,8 @@ import static com.s13.codify.Utils.Constants.IMAGE_STATUS_NOT_CHECKED;
 public class ImagesRepo {
 
     private ImagesDao imagesDao;
-    private LiveData<List<Images>> allImagesByImageStatus;
-    private LiveData<List<String>> allImagesPathByImageStatus;
+    private List<Images> allImagesByImageStatus;
+    private List<String> allImagesPathByImageStatus;
 
 
     public ImagesRepo(Application application) {
@@ -31,12 +31,12 @@ public class ImagesRepo {
         return imagesDao.getImageDataByImagePath(imagePathList);
     }
 
-    public LiveData<List<String>> getAllImagesByImageStatus(String queryStatus) {
+    public List<String> getAllImagesByImageStatus(String queryStatus) {
         allImagesPathByImageStatus = imagesDao.getImageListByImageStatus(queryStatus);
         return allImagesPathByImageStatus;
     }
 
-    public LiveData<List<Images>> getAllImagesExceptQueryStatus(String queryStatus) {
+    public List<Images> getAllImagesExceptQueryStatus(String queryStatus) {
         return imagesDao.getImageListByNotImageStatus(queryStatus);
     }
 

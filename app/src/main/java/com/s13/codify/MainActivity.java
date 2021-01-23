@@ -46,19 +46,6 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
         }
 
-        FirebaseCustomRemoteModel remoteModel =
-                new FirebaseCustomRemoteModel.Builder("cnn-model").build();
-        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
-                .requireWifi()
-                .build();
-        FirebaseModelManager.getInstance().download(remoteModel, conditions)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void v) {
-                        System.out.println(remoteModel.toString() + "LAALEDE ORU KARYAM");
-                    }
-                });
-
         setContentView(R.layout.activity_main);
         dataList = findViewById(R.id.dataList);
 

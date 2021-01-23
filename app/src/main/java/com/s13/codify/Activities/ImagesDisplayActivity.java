@@ -23,9 +23,13 @@ import com.s13.codify.Room.Images;
 import com.s13.codify.Room.ImagesRepo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static com.s13.codify.services.ImageFinder.N_THREADS;
 
 public class ImagesDisplayActivity extends AppCompatActivity {
 
@@ -41,6 +45,14 @@ public class ImagesDisplayActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_image_display);
+        images = new ArrayList<>();
+        galleryAdapter = new GalleryAdapter(this, images, new GalleryAdapter.PhotoListener() {
+            @Override
+            public void onPhotoClick(String path) {
+                // Do something with the photo here
+                Toast.makeText(ImagesDisplayActivity.this, ""+path, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         gallery_number = findViewById(R.id.gallery_number);
         recyclerView = findViewById(R.id.recyclerview_gallery_images);
@@ -53,31 +65,16 @@ public class ImagesDisplayActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
 
         String modelClass = getIntent().getStringExtra("modelClass");
-//        System.out.println("CHECKQQQ" + modelClass);
-
-        ImagesRepo repo = new ImagesRepo(getApplication());
-        LiveData<List<String>> imagesLive = repo.getAllImagesByImageStatus(modelClass);
-        imagesLive.observe(this, new Observer<List<String>>()  {
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        executorService.execute(new Runnable() {
             @Override
-            public void onChanged(List<String> images) {
-                System.out.println("CHECKQQQ" + images);
-                if(images == null) {
-                    images = new ArrayList<>();
-                }
-                galleryAdapter.setImages(images);
-            }
-        });
-
-         galleryAdapter = new GalleryAdapter(this, images, new GalleryAdapter.PhotoListener() {
-            @Override
-            public void onPhotoClick(String path) {
-                // Do something with the photo here
-                Toast.makeText(ImagesDisplayActivity.this, ""+path, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        recyclerView.setAdapter(galleryAdapter);
-        gallery_number.setText("Photos (0)");
+            public void run() {
+                ImagesRepo repo = new ImagesRepo(getApplication());
+                List<String> imagesLive = repo.getAllImagesByImageStatus(modelClass);
+                galleryAdapter.setImages(imagesLive);
+                recyclerView.setAdapter(galleryAdapter);
+                gallery_number.setText("Photos (" + imagesLive.size() + ")");
+            }});
     }
 
     @Override
