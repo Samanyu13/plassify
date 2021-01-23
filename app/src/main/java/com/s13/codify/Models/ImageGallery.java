@@ -27,13 +27,12 @@ public class ImageGallery {
 
         // Get Folder Name
          column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX");
-//        while (cursor.moveToNext()) {
-//            absolutePathOfImage = cursor.getString(column_index_data);
-//            folderName = cursor.getString(column_index_folder_name);
-//            System.out.println(folderName);
-//            listOfAllImages.add(absolutePathOfImage);
-//        }
+        while (cursor.moveToNext()) {
+            absolutePathOfImage = cursor.getString(column_index_data);
+            folderName = cursor.getString(column_index_folder_name);
+            System.out.println(folderName);
+            listOfAllImages.add(absolutePathOfImage);
+        }
 
         return listOfAllImages;
     }

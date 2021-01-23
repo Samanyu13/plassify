@@ -14,8 +14,6 @@ import com.s13.codify.R;
 
 import java.util.List;
 
-//import com.s13.codify.R;
-
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewGalleryHolder> {
 
     private Context context;

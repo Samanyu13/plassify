@@ -64,7 +64,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 public void onClick(View v) {
 //                    context = v.getContext();
                     Intent intent = new Intent(context, ImagesDisplayActivity.class);
-                    intent.putExtra("MODELCLASS",title.getText());
+                    intent.putExtra("modelClass",title.getText());
                     context.startActivity(intent);
                 }
             });

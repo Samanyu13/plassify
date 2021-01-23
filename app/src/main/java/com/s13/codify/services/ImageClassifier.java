@@ -64,7 +64,7 @@ public class ImageClassifier extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!isRunning) {
 
-            FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("Image-classifier").build();
+            FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("cnn-model").build();
             FirebaseModelManager.getInstance().getLatestModelFile(remoteModel)
                     .addOnCompleteListener(new OnCompleteListener<File>() {
                         @Override
@@ -175,7 +175,7 @@ public class ImageClassifier extends Service {
                                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
 
                                 //reshape the image into 400*400
-                                bitmap = Bitmap.createScaledBitmap(bitmap, 224, 224, true);
+                                bitmap = Bitmap.createScaledBitmap(bitmap, 180, 180, true);
 
                                 // IP Image Buffer
                                 DataType imageDataType = interpreter.getInputTensor(0).dataType();

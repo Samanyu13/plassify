@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         FirebaseCustomRemoteModel remoteModel =
-                new FirebaseCustomRemoteModel.Builder("Image-classifier").build();
+                new FirebaseCustomRemoteModel.Builder("cnn-model").build();
         FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
                 .requireWifi()
                 .build();

@@ -52,15 +52,18 @@ public class ImagesDisplayActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
 
-        String modelClass = getIntent().getStringExtra("MODELCLASS");
+        String modelClass = getIntent().getStringExtra("modelClass");
+//        System.out.println("CHECKQQQ" + modelClass);
 
         ImagesRepo repo = new ImagesRepo(getApplication());
         LiveData<List<String>> imagesLive = repo.getAllImagesByImageStatus(modelClass);
         imagesLive.observe(this, new Observer<List<String>>()  {
             @Override
             public void onChanged(List<String> images) {
-                if(images == null)
+                System.out.println("CHECKQQQ" + images);
+                if(images == null) {
                     images = new ArrayList<>();
+                }
                 galleryAdapter.setImages(images);
             }
         });
