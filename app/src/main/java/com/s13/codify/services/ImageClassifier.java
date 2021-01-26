@@ -19,10 +19,10 @@ import com.s13.codify.Room.Images;
 import com.s13.codify.Room.ImagesRepo;
 import com.s13.codify.Room.ImagesRoomDatabase;
 
-import org.pytorch.IValue;
-import org.pytorch.Module;
-import org.pytorch.Tensor;
-import org.pytorch.torchvision.TensorImageUtils;
+//import org.pytorch.IValue;
+//import org.pytorch.Module;
+//import org.pytorch.Tensor;
+//import org.pytorch.torchvision.TensorImageUtils;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.support.common.TensorOperator;

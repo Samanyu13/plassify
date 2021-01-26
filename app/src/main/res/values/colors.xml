@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="background">#ececec</color>
+
+
+    <drawable name="highlight_pressed">#98dff3</drawable>
+    <drawable name="highlight_focused">#b9e6f3</drawable>
 </resources>

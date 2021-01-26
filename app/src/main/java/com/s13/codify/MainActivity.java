@@ -37,6 +37,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        FirebaseCustomRemoteModel remoteModel =
+                new FirebaseCustomRemoteModel.Builder("cnn-model").build();
+        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
+                .requireWifi()
+                .build();
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void v) {
+                        System.out.println("Model Downloaded");
+                    }
+                });
+
+
         super.onCreate(savedInstanceState);
         //Check permission
         runImageFinder(this);

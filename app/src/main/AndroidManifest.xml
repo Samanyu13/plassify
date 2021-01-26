@@ -10,11 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Plassify">
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:label="Individual"
@@ -31,8 +31,17 @@
             android:name=".Activities.Activity2" >
         </activity>
         <activity
-            android:label="TestPage"
+            android:label="Images"
             android:name=".Activities.ImagesDisplayActivity" >
+        </activity>
+        <activity
+            android:label="Choose your Labels"
+            android:name=".Activities.Preferences" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <service
             android:name=".services.ImageFinder"

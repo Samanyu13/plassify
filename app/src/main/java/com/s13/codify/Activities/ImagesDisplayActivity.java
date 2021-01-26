@@ -1,6 +1,7 @@
 package com.s13.codify.Activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -67,6 +68,7 @@ public class ImagesDisplayActivity extends AppCompatActivity {
         String modelClass = getIntent().getStringExtra("modelClass");
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         executorService.execute(new Runnable() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 ImagesRepo repo = new ImagesRepo(getApplication());
