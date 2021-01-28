@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ListView
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/list"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/background"
-    android:cacheColorHint="@android:color/transparent"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="8dp"
-    android:scrollbarStyle="outsideOverlay"
-    android:paddingBottom="8dp"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:paddingTop="15dp" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".Activities.Preferences">
 
-</ListView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:src="@drawable/ic_save" />
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/content_contextual_menu"/>
+
+    </LinearLayout>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

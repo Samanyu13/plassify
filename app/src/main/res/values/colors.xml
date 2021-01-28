@@ -12,4 +12,12 @@
 
     <drawable name="highlight_pressed">#98dff3</drawable>
     <drawable name="highlight_focused">#b9e6f3</drawable>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="list_divider">#979797</color>
+    <color name="list_item_selected_state">#F4F6F6</color>
+    <color name="list_item_normal_state">#FFFFFF</color>
 </resources>

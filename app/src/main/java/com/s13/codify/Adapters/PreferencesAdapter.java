@@ -1,129 +1,67 @@
-
 package com.s13.codify.Adapters;
 
-import java.util.List;
-
-
-import com.s13.codify.Models.Row;
-import com.s13.codify.R;
-
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-/**
- * Custom adapter - "View Holder Pattern"
- */
-public class PreferencesAdapter extends ArrayAdapter<Row> implements
-        View.OnClickListener {
+import com.s13.codify.Models.PreferencesModel;
+import com.s13.codify.R;
 
-    private LayoutInflater layoutInflater;
+import java.util.ArrayList;
 
-    public PreferencesAdapter(Context context, List<Row> objects) {
-        super(context, 0, objects);
-        layoutInflater = LayoutInflater.from(context);
+public class PreferencesAdapter extends RecyclerView.Adapter<PreferencesAdapter.MyViewHolder> {
+
+    public ArrayList<PreferencesModel> usersList=new ArrayList<>();
+    public ArrayList<PreferencesModel> selected_usersList=new ArrayList<>();
+    Context mContext;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView posting, name;
+        public LinearLayout ll_listitem;
+
+        public MyViewHolder(View view) {
+            super(view);
+            posting = (TextView) view.findViewById(R.id.tv_posting);
+            name = (TextView) view.findViewById(R.id.tv_user_name);
+            ll_listitem=(LinearLayout)view.findViewById(R.id.ll_listitem);
+
+        }
+    }
+
+
+    public PreferencesAdapter(Context context,ArrayList<PreferencesModel> userList,ArrayList<PreferencesModel> selectedList) {
+        this.mContext=context;
+        this.usersList = userList;
+        this.selected_usersList = selectedList;
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        // holder pattern
-        Holder holder = null;
-        if (convertView == null) {
-            holder = new Holder();
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_labellist, parent, false);
 
-            convertView = layoutInflater.inflate(R.layout.preferences_row, parent, false);
-            holder.setTextViewTitle((TextView) convertView
-                    .findViewById(R.id.textViewTitle));
-//            holder.setTextViewSubtitle((TextView) convertView
-//                    .findViewById(R.id.textViewSubtitle));
-            holder.setCheckBox((CheckBox) convertView
-                    .findViewById(R.id.checkBox));
-            convertView.setTag(holder);
-        } else {
-            holder = (Holder) convertView.getTag();
-        }
-
-        final Row row = getItem(position);
-        holder.getTextViewTitle().setText(row.getTitle());
-//        holder.getTextViewSubtitle().setText(row.getSubtitle());
-        holder.getCheckBox().setTag(position);
-        holder.getCheckBox().setChecked(row.isChecked());
-        holder.getCheckBox().setOnClickListener(this);
-
-        changeBackground(getContext(), holder.getCheckBox());
-
-        return convertView;
+        return new MyViewHolder(itemView);
     }
-
 
     @Override
-    public void onClick(View v) {
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        PreferencesModel movie = usersList.get(position);
+        holder.name.setText(movie.getLabel());
+        holder.posting.setText(movie.getInfo());
 
-        CheckBox checkBox = (CheckBox) v;
-        int position = (Integer) v.getTag();
-        getItem(position).setChecked(checkBox.isChecked());
-
-        changeBackground(PreferencesAdapter.this.getContext(), checkBox);
-        String msg = this.getContext().getString(R.string.check_toast,
-                position, checkBox.isChecked());
-        Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-
-    /**
-     * Set the background of a row based on the value of its checkbox value.
-     * Checkbox has its own style.
-     */
-    @SuppressWarnings("deprecation")
-    private void changeBackground(Context context, CheckBox checkBox) {
-        View row = (View) checkBox.getParent();
-        Drawable drawable = context.getResources().getDrawable(
-                R.drawable.preferences_selector_checked);
-        if (checkBox.isChecked()) {
-            drawable = context.getResources().getDrawable(
-                    R.drawable.preferences_selector_checked);
-        } else {
-            drawable = context.getResources().getDrawable(
-                    R.drawable.preferences_selector);
-        }
-        row.setBackgroundDrawable(drawable);
-    }
-
-    static class Holder {
-        TextView textViewTitle;
-        TextView textViewSubtitle;
-        CheckBox checkBox;
-
-        public TextView getTextViewTitle() {
-            return textViewTitle;
-        }
-
-        public void setTextViewTitle(TextView textViewTitle) {
-            this.textViewTitle = textViewTitle;
-        }
-
-        public TextView getTextViewSubtitle() {
-            return textViewSubtitle;
-        }
-
-        public void setTextViewSubtitle(TextView textViewSubtitle) {
-            this.textViewSubtitle = textViewSubtitle;
-        }
-
-        public CheckBox getCheckBox() {
-            return checkBox;
-        }
-
-        public void setCheckBox(CheckBox checkBox) {
-            this.checkBox = checkBox;
-        }
+        if(selected_usersList.contains(usersList.get(position)))
+            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.list_item_selected_state));
+        else
+            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.list_item_normal_state));
 
     }
 
+    @Override
+    public int getItemCount() {
+        return usersList.size();
+    }
 }
