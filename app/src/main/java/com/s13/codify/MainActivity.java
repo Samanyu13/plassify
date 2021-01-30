@@ -3,6 +3,8 @@ package com.s13.codify;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +23,8 @@ import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import com.s13.codify.Activities.ImagesDisplayActivity;
 import com.s13.codify.Adapters.Adapter;
 import com.s13.codify.Models.ModelClasses;
+import com.s13.codify.Room.ModelClasses.ModelClass;
+import com.s13.codify.Room.ModelClasses.ModelClassesRepo;
 import com.s13.codify.services.ImageFinderScheduler;
 
 import java.util.ArrayList;
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     List<String> titles;
     List<Integer> images;
     Adapter adapter;
+    ModelClassesRepo repo;
     private static final int MY_READ_PERMISSION_CODE = 101;
 
     @Override
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         //Check permission
+        repo = new ModelClassesRepo(getApplication());
         runImageFinder(this);
         if(ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -67,10 +73,6 @@ public class MainActivity extends AppCompatActivity {
         titles = new ArrayList<>();
         images = new ArrayList<>();
 
-        for(int i = 0; i < (ModelClasses.MODEL_CLASSES).length; i++) {
-            titles.add(ModelClasses.MODEL_CLASSES[i]);
-            images.add(R.drawable.ic_baseline_folder_24);
-        }
 
         adapter = new Adapter(this,titles,images);
 
@@ -78,7 +80,24 @@ public class MainActivity extends AppCompatActivity {
         dataList.setLayoutManager(gridLayoutManager);
         dataList.setAdapter(adapter);
 
+        LiveData<List<ModelClass>> selectedModelClasses = repo.getModelClassByPreference(true);
+        selectedModelClasses.observe(this, new Observer<List<ModelClass>>() {
+            @Override
+            public void onChanged(List<ModelClass> modelClasses) {
+                List<String> updatedTitles = new ArrayList<>();
+                List<Integer> updatedImages = new ArrayList<>();
+                for(ModelClass modelClass: modelClasses){
+                    updatedTitles.add(modelClass.getClassName());
+                    updatedImages.add(R.drawable.ic_baseline_folder_24);
+                }
+                updatedTitles.add("Others");
+                updatedImages.add(R.drawable.ic_baseline_folder_24);
+                adapter.setImage(updatedImages);
+                adapter.setTitles(updatedTitles);
+                dataList.setAdapter(adapter);
 
+            }
+        });
 
     }
 

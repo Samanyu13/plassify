@@ -1,17 +1,26 @@
 package com.s13.codify.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.s13.codify.Adapters.PreferencesAdapter;
+import com.s13.codify.MainActivity;
+import com.s13.codify.Models.ModelClasses;
 import com.s13.codify.Models.PreferencesModel;
 import com.s13.codify.R;
+import com.s13.codify.Room.ModelClasses.ModelClass;
+import com.s13.codify.Room.ModelClasses.ModelClassesRepo;
 import com.s13.codify.Utils.AlertDialogHelper;
 import com.s13.codify.Utils.RecyclerItemClickListener;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,9 +29,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class Preferences extends AppCompatActivity implements AlertDialogHelper.AlertDialogListener{
+import static com.s13.codify.Models.ModelClasses.MODEL_CLASSES;
 
+public class Preferences extends AppCompatActivity implements AlertDialogHelper.AlertDialogListener {
+
+    private static final int N_THREADS = 10;
     ActionMode mActionMode;
     Menu context_menu;
 
@@ -36,18 +51,19 @@ public class Preferences extends AppCompatActivity implements AlertDialogHelper.
 
     AlertDialogHelper alertDialogHelper;
 
+    ModelClassesRepo repo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
-
-        alertDialogHelper =new AlertDialogHelper(this);
+        insert_data();
+        alertDialogHelper = new AlertDialogHelper(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        repo = new ModelClassesRepo(getApplication());
 
-        data_load();
-
-        multiSelectAdapter = new PreferencesAdapter(this,user_list,multiselect_list);
+        multiSelectAdapter = new PreferencesAdapter(this, user_list, multiselect_list);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -77,25 +93,26 @@ public class Preferences extends AppCompatActivity implements AlertDialogHelper.
 
             }
         }));
-
+        data_load();
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Click action
-                if(multiselect_list.size()>0) {
-                    user_list.clear();
-                    for(int i=0;i<multiselect_list.size();i++)
-                        user_list.add(multiselect_list.get(i));
-                    System.out.println(user_list+"XXX");
-                    multiSelectAdapter.notifyDataSetChanged();
-
-                    if (mActionMode != null) {
-                        mActionMode.finish();
+                Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(main);
+                setContentView(R.layout.activity_main);
+                if (multiselect_list.size() > 0) {
+                    for(int i = 0; i<multiselect_list.size();i++) {
+                        ModelClass modelClass = new ModelClass();
+                        modelClass.setClassName(multiselect_list.get(i).getLabel());
+                        modelClass.setSelected(true);
+                        repo.updatePreference(modelClass);
                     }
+
+
                     Toast.makeText(getApplicationContext(), "Delete Click", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "Select one or more option to continue..!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -131,16 +148,35 @@ public class Preferences extends AppCompatActivity implements AlertDialogHelper.
         return true;
     }
 
-    public void data_load() {
-        String name[] = {"Gokul", "Rajesh", "Ranjith", "Madhu", "Ameer", "Sonaal"};
-        String posting[] = {"Manager", "HR", "Android Developer", "iOS Developer", "Team Leader", "Designer"};
 
-        for (int i = 0; i < name.length; i++) {
-            PreferencesModel mSample = new PreferencesModel(name[i], posting[i]);
-            user_list.add(mSample);
-        }
+    public void data_load() {
+
+        LiveData<List<ModelClass>> modelClasses = repo.getModelClasses();
+        modelClasses.observe(this, new Observer<List<ModelClass>>() {
+            @Override
+            public void onChanged(List<ModelClass> modelClasses) {
+                ArrayList<PreferencesModel> userList = new ArrayList<>();
+                for (int i = 0; i < modelClasses.size(); i++) {
+                    PreferencesModel mSample = new PreferencesModel(modelClasses.get(i).getClassName(), "Soman");
+                    userList.add(mSample);
+                }
+                multiSelectAdapter.setUsersList(userList);
+                recyclerView.setAdapter(multiSelectAdapter);
+                user_list = userList;
+            }
+        });
     }
 
+    public void insert_data() {
+        ModelClassesRepo repo = new ModelClassesRepo(getApplication());
+        String[] modelClasses = MODEL_CLASSES;
+        for (int i = 0; i < modelClasses.length; i++) {
+            ModelClass modelClass = new ModelClass();
+            modelClass.setClassName(modelClasses[i]);
+            modelClass.setSelected(false);
+            repo.insert(modelClass);
+        }
+    }
 
     public void multi_select(int position) {
         if (mActionMode != null) {
@@ -160,10 +196,9 @@ public class Preferences extends AppCompatActivity implements AlertDialogHelper.
     }
 
 
-    public void refreshAdapter()
-    {
-        multiSelectAdapter.selected_usersList=multiselect_list;
-        multiSelectAdapter.usersList=user_list;
+    public void refreshAdapter() {
+        multiSelectAdapter.selected_usersList = multiselect_list;
+        multiSelectAdapter.usersList = user_list;
         multiSelectAdapter.notifyDataSetChanged();
     }
 

@@ -1,4 +1,4 @@
-package com.s13.codify.Room;
+package com.s13.codify.Room.Images;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

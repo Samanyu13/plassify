@@ -1,11 +1,14 @@
-package com.s13.codify.Room;
+package com.s13.codify.Room.Images;
 
 //package com.example.memedetection.Repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
 
-import androidx.lifecycle.LiveData;
+import com.s13.codify.Room.Images.Images;
+import com.s13.codify.Room.Images.ImagesDao;
+import com.s13.codify.Room.ImagesRoomDatabase;
+
 import java.util.Date;
 //import com.example.memedetection.Room.ImageDao;
 //import com.example.memedetection.Room.ImageRoomDataset;
@@ -40,6 +43,10 @@ public class ImagesRepo {
         return imagesDao.getImageListByNotImageStatus(queryStatus);
     }
 
+    public List<String> getImagesWithStatusNotInList(List<String> imageStatus){
+        return imagesDao.getImagesWithStatusNotInList(imageStatus);
+    }
+
     public List<Images> getImageListByImageStatusNotCheck() {
         return imagesDao.getImageListByImageStatusNotCheck(IMAGE_STATUS_NOT_CHECKED);
     }
@@ -57,7 +64,6 @@ public class ImagesRepo {
 
         new deleteAsyncTask(imagesDao).execute(status);
 
-//        mImageDao.deleteByStatus(status);
     }
 
     public void updateLabelByImagePath(String imagePath, String label){

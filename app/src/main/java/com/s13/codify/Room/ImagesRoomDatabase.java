@@ -1,18 +1,20 @@
 package com.s13.codify.Room;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import com.s13.codify.Room.Images.Images;
+import com.s13.codify.Room.Images.ImagesDao;
+import com.s13.codify.Room.ModelClasses.ModelClass;
+import com.s13.codify.Room.ModelClasses.ModelClassesDao;
 
 //import com.example.memedetection.Repository.ImageRepo;
 
-@Database(entities = {Images.class}, version = 1, exportSchema=true)
+@Database(entities = {Images.class, ModelClass.class}, version = 1, exportSchema=true)
 @TypeConverters({Converters.class})
 public abstract class ImagesRoomDatabase extends RoomDatabase {
 
@@ -34,5 +36,7 @@ public abstract class ImagesRoomDatabase extends RoomDatabase {
     }
 
     public abstract ImagesDao imagesDao();
+
+    public abstract ModelClassesDao modelClassesDao();
 
 }

@@ -70,4 +70,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             });
         }
     }
+
+    public void setTitles(List<String> titles){
+        this.titles = titles;
+    }
+
+    public void setImage(List<Integer> images){
+        this.images = images;
+    }
+
 }

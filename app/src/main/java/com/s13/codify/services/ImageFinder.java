@@ -4,16 +4,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.widget.ImageView;
 
-import com.s13.codify.Models.ModelClasses;
-import com.s13.codify.Room.Images;
+import com.s13.codify.Room.Images.Images;
 import com.s13.codify.Room.ImagesRoomDatabase;
 
 import java.util.Date;

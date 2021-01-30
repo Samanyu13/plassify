@@ -64,4 +64,6 @@ public class PreferencesAdapter extends RecyclerView.Adapter<PreferencesAdapter.
     public int getItemCount() {
         return usersList.size();
     }
+
+    public void setUsersList(ArrayList<PreferencesModel> usersList){ this.usersList = usersList; }
 }

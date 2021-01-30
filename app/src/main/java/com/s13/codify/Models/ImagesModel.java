@@ -3,10 +3,9 @@ package com.s13.codify.Models;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
-import com.s13.codify.Room.Images;
-import com.s13.codify.Room.ImagesRepo;
+import com.s13.codify.Room.Images.Images;
+import com.s13.codify.Room.Images.ImagesRepo;
 
 import java.util.List;
 

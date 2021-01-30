@@ -1,10 +1,11 @@
-package com.s13.codify.Room;
+package com.s13.codify.Room.Images;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
+import com.s13.codify.Room.Images.Images;
 
 import java.util.Date;
 import java.util.List;
@@ -45,4 +46,7 @@ public interface ImagesDao {
 
     @Query("SELECT last_classified_timestamp FROM IMAGES ORDER BY last_classified_timestamp DESC LIMIT 1")
     Date getLastClassifiedTimestamp();
+
+    @Query("SELECT image_path FROM IMAGES WHERE image_status NOT IN (:filterValues)")
+    List<String> getImagesWithStatusNotInList(List<String> filterValues);
 }

@@ -15,9 +15,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import com.s13.codify.Models.ModelClasses;
-import com.s13.codify.Room.Images;
-import com.s13.codify.Room.ImagesRepo;
+import com.s13.codify.Room.Images.Images;
 import com.s13.codify.Room.ImagesRoomDatabase;
+import com.s13.codify.Room.ModelClasses.ModelClass;
+import com.s13.codify.Room.ModelClasses.ModelClassesRepo;
 
 //import org.pytorch.IValue;
 //import org.pytorch.Module;
@@ -33,10 +34,6 @@ import org.tensorflow.lite.support.label.TensorLabel;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -47,10 +44,9 @@ import java.util.PriorityQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.s13.codify.Models.ModelClasses.MODEL_CLASSES;
 import static com.s13.codify.Utils.Constants.IMAGE_STATUS_NOT_CHECKED;
 import static com.s13.codify.Utils.Constants.MAX_RESULTS;
-import static java.lang.Integer.min;
-import static org.checkerframework.checker.units.UnitsTools.min;
 
 public class ImageClassifier extends Service {
     public static final int N_THREADS = 5;
@@ -69,6 +65,7 @@ public class ImageClassifier extends Service {
                     .addOnCompleteListener(new OnCompleteListener<File>() {
                         @Override
                         public void onComplete(@NonNull Task<File> task) {
+                            insert_data();
                             File modelFile = task.getResult();
                             if (modelFile != null) {
                                 ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
@@ -98,6 +95,16 @@ public class ImageClassifier extends Service {
         return Service.START_NOT_STICKY;
     }
 
+    public void insert_data(){
+        ModelClassesRepo repo = new ModelClassesRepo(getApplication());
+        String[] modelClasses = MODEL_CLASSES;
+        for(int i = 0; i < modelClasses.length ; i++){
+            ModelClass modelClass = new ModelClass();
+            modelClass.setClassName(modelClasses[i]);
+            modelClass.setSelected(false);
+            repo.insert(modelClass);
+        }
+    }
 
     /** An immutable result returned by a Classifier describing what was recognized. */
     public static class Recognition {
