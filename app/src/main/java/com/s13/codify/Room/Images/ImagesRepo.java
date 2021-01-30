@@ -34,23 +34,6 @@ public class ImagesRepo {
         return imagesDao.getImageDataByImagePath(imagePathList);
     }
 
-    public List<String> getAllImagesByImageStatus(String queryStatus) {
-        allImagesPathByImageStatus = imagesDao.getImageListByImageStatus(queryStatus);
-        return allImagesPathByImageStatus;
-    }
-
-    public List<Images> getAllImagesExceptQueryStatus(String queryStatus) {
-        return imagesDao.getImageListByNotImageStatus(queryStatus);
-    }
-
-    public List<String> getImagesWithStatusNotInList(List<String> imageStatus){
-        return imagesDao.getImagesWithStatusNotInList(imageStatus);
-    }
-
-    public List<Images> getImageListByImageStatusNotCheck() {
-        return imagesDao.getImageListByImageStatusNotCheck(IMAGE_STATUS_NOT_CHECKED);
-    }
-
     public void deleteImagesByImagePath(String path){
         imagesDao.deleteByImagePath(path);
     }
@@ -58,17 +41,6 @@ public class ImagesRepo {
 
     public void insert(Images word) {
         new insertAsyncTask(imagesDao).execute(word);
-    }
-
-    public void deleteByStatus(String status){
-
-        new deleteAsyncTask(imagesDao).execute(status);
-
-    }
-
-    public void updateLabelByImagePath(String imagePath, String label){
-        Date lastClassifiedTimestamp = new Date();
-        imagesDao.updateImageLabelByImagePath(imagePath,label,lastClassifiedTimestamp);
     }
 
     public int getRowCount() {
@@ -90,19 +62,4 @@ public class ImagesRepo {
         }
     }
 
-    private static class deleteAsyncTask extends AsyncTask<String, Void, Void> {
-
-        private ImagesDao mAsyncTaskDao;
-
-        deleteAsyncTask(ImagesDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-
-        @Override
-        protected Void doInBackground(final String... params) {
-            mAsyncTaskDao.deleteByStatus(params[0]);
-            return null;
-        }
-    }
 }

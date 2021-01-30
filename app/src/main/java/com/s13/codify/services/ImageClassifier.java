@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import com.s13.codify.Models.ModelClasses;
+import com.s13.codify.Room.Classifications.Classification;
 import com.s13.codify.Room.Images.Images;
 import com.s13.codify.Room.ImagesRoomDatabase;
 import com.s13.codify.Room.ModelClasses.ModelClass;
@@ -76,14 +77,15 @@ public class ImageClassifier extends Service {
                                     public void run() {
                                         isRunning = true;
                                         Interpreter interpreter = new Interpreter(modelFile);
-                                        List<Images> images = db.imagesDao().getImageListByImageStatusNotCheck(IMAGE_STATUS_NOT_CHECKED);
+                                        List<Images> images = db.imagesDao().getUnclassifiedImages();
                                         for (Images image : images) {
                                             String imagePath = image.getImagePath();
                                             System.out.println("Classifying image.....");
                                             String label = classify(imagePath, interpreter);
                                             System.out.println("Classification complete !");
-                                            Date lastClassifiedTimestamp = new Date();
-                                            db.imagesDao().updateImageLabelByImagePath(imagePath, label, lastClassifiedTimestamp);
+                                            Date classificationTimestamp = new Date();
+                                            Classification classification = new Classification(imagePath, label, classificationTimestamp);
+                                            db.classificationDao().insert(classification);
                                         }
                                         isRunning = false;
                                     }

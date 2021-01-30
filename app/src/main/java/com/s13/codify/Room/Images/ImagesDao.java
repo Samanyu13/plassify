@@ -19,34 +19,15 @@ public interface ImagesDao {
     @Query("DELETE FROM Images")
     void deleteAll();
 
-    @Query("DELETE FROM Images WHERE image_status = :queryStatus")
-    void deleteByStatus(String queryStatus);
-
     @Query("DELETE FROM Images WHERE image_path = :imagePathString")
     void deleteByImagePath(String imagePathString);
-
-    @Query("SELECT image_path from Images WHERE image_status = :queryText")
-    List<String> getImageListByImageStatus(String queryText);
-
-    @Query("SELECT * from Images WHERE image_status != :queryText ")
-    List<Images> getImageListByNotImageStatus(String queryText);
-
-    @Query("SELECT * from Images WHERE image_status = :queryText LIMIT 100")
-    List<Images> getImageListByImageStatusNotCheck(String queryText);
-
 
     @Query("SELECT * from Images WHERE image_path IN (:queryList)")
     List<Images> getImageDataByImagePath(List<String> queryList);
 
-    @Query("UPDATE Images SET image_status=:label, last_classified_timestamp= :lastModifiedTimestamp where image_path = :imagePath")
-    void updateImageLabelByImagePath(String imagePath, String label, Date lastModifiedTimestamp);
+    @Query("SELECT * from Images where image_path NOT IN ( SELECT DISTINCT image_id from Classification )")
+    List<Images> getUnclassifiedImages();
 
     @Query("SELECT COUNT(image_path) FROM Images")
     int getRowCount();
-
-    @Query("SELECT last_classified_timestamp FROM IMAGES ORDER BY last_classified_timestamp DESC LIMIT 1")
-    Date getLastClassifiedTimestamp();
-
-    @Query("SELECT image_path FROM IMAGES WHERE image_status NOT IN (:filterValues)")
-    List<String> getImagesWithStatusNotInList(List<String> filterValues);
 }

@@ -48,7 +48,7 @@ public class ImageFinder extends Service {
 
                         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
-                        Date lastClassifiedTime = db.imagesDao().getLastClassifiedTimestamp();
+                        Date lastClassifiedTime = db.classificationDao().getLastClassifiedTimestamp();
                         String[] projection = {
                                 MediaStore.MediaColumns.DATA,
                                 MediaStore.Images.Media.DISPLAY_NAME,
@@ -69,7 +69,7 @@ public class ImageFinder extends Service {
                         String[] count = cursor.getColumnNames();
                         while (cursor.moveToNext()) {
                             absolutePathOfImage = cursor.getString(column_index_data);
-                            Images image = new Images(absolutePathOfImage, IMAGE_STATUS_NOT_CHECKED);
+                            Images image = new Images(absolutePathOfImage);
                             System.out.println("Inserting image");
                             db.imagesDao().insert(image);
                         }

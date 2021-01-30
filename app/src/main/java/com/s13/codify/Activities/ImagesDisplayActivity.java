@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.s13.codify.Adapters.GalleryAdapter;
 import com.s13.codify.Models.ModelClasses;
 import com.s13.codify.R;
+import com.s13.codify.Room.Classifications.Classification;
+import com.s13.codify.Room.Classifications.ClassificationRepo;
 import com.s13.codify.Room.Images.ImagesRepo;
 import com.s13.codify.Room.ModelClasses.ModelClass;
 import com.s13.codify.Room.ModelClasses.ModelClassesRepo;
@@ -63,11 +65,11 @@ public class ImagesDisplayActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void run() {
-                ImagesRepo repo = new ImagesRepo(getApplication());
+                ClassificationRepo repo = new ClassificationRepo(getApplication());
                 ModelClassesRepo modelRepo = new ModelClassesRepo(getApplication());
                 List<String> imagesLive = new ArrayList<String>();
                 if(!modelClass.equals("Others")) {
-                    imagesLive = repo.getAllImagesByImageStatus(modelClass);
+                    imagesLive = repo.getByImagesClassification(modelClass);
                 }
                 else{
                     List<String> otherClasses = modelRepo.getListModelClassByPreference(true);

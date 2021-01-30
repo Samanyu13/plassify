@@ -20,7 +20,7 @@ public class ImagesModel extends AndroidViewModel {
     public ImagesModel (Application application) {
         super(application);
         imageRepository = new ImagesRepo(application);
-        images = imageRepository.getAllImagesByImageStatus(IMAGE_STATUS_MEME);
+//        images = imageRepository.getAllImagesByImageStatus(IMAGE_STATUS_MEME);
     }
 
     List<String> getAllImages() { return images; }
