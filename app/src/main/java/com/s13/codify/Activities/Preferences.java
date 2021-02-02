@@ -99,8 +99,15 @@ public class Preferences extends AppCompatActivity implements AlertDialogHelper.
             @Override
             public void onClick(View view) {
                 // Click action
+//                Intent main = new Intent(getApplicationContext(), MainActivity.class);
+//                startActivity(main);
+
                 Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                main.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(main);
+
                 setContentView(R.layout.activity_main);
                 if (multiselect_list.size() > 0) {
                     for(int i = 0; i<multiselect_list.size();i++) {

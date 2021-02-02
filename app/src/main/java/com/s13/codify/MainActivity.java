@@ -13,14 +13,20 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import com.s13.codify.Activities.ImagesDisplayActivity;
+import com.s13.codify.Activities.Preferences;
 import com.s13.codify.Adapters.Adapter;
 import com.s13.codify.Models.ModelClasses;
 import com.s13.codify.Room.ModelClasses.ModelClass;
@@ -43,8 +49,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        // Check if we need to display our OnboardingSupportFragment
+        if (!sharedPreferences.getBoolean(
+                getString(R.string.pref_previously_started), false)) {
+
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+            edit.commit();
+            // The user hasn't seen the OnboardingSupportFragment yet, so show it
+            startActivity(new Intent(this, Preferences.class));
+        }
+
+
         FirebaseCustomRemoteModel remoteModel =
-                new FirebaseCustomRemoteModel.Builder("cnn-model").build();
+                new FirebaseCustomRemoteModel.Builder("yolov4_tiny").build();
         FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
                 .requireWifi()
                 .build();
@@ -56,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-
-        super.onCreate(savedInstanceState);
         //Check permission
         repo = new ModelClassesRepo(getApplication());
         runImageFinder(this);
@@ -99,6 +119,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private Boolean exit = false;
+    @Override
+    public void onBackPressed() {
+        if(exit) {
+            finish();
+        }
+        else {
+            Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+        }
     }
 
     private void runImageFinder(Context context){
