@@ -110,6 +110,12 @@ public class Preferences extends AppCompatActivity implements AlertDialogHelper.
 
                 setContentView(R.layout.activity_main);
                 if (multiselect_list.size() > 0) {
+                    for(int i = 0;i< MODEL_CLASSES.length;i++){
+                        ModelClass modelClass = new ModelClass();
+                        modelClass.setClassName(MODEL_CLASSES[i]);
+                        modelClass.setSelected(false);
+                        repo.updatePreference(modelClass);
+                    }
                     for(int i = 0; i<multiselect_list.size();i++) {
                         ModelClass modelClass = new ModelClass();
                         modelClass.setClassName(multiselect_list.get(i).getLabel());
@@ -126,34 +132,6 @@ public class Preferences extends AppCompatActivity implements AlertDialogHelper.
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_common_activity, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//
-//        switch (id) {
-//            case android.R.id.home:
-//            case R.id.action_exit:
-//                onBackPressed();
-//                return true;
-//            case R.id.action_settings:
-//                Toast.makeText(getApplicationContext(),"Settings Click",Toast.LENGTH_SHORT).show();
-//                return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-        return true;
-    }
 
 
     public void data_load() {

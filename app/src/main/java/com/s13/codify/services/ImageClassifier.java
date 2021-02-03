@@ -329,6 +329,7 @@ import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import com.s13.codify.Models.Detector;
 import com.s13.codify.Models.ModelClasses;
 import com.s13.codify.Models.TFLiteObjectDetectionAPIModel;
+import com.s13.codify.Room.Classifications.Classification;
 import com.s13.codify.Room.Images.Images;
 import com.s13.codify.Room.ImagesRoomDatabase;
 import com.s13.codify.Room.ModelClasses.ModelClass;
@@ -346,6 +347,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -359,8 +361,8 @@ public class ImageClassifier extends Service {
 
     // Configuration values for the prepackaged SSD model.
     private static final int TF_OD_API_INPUT_SIZE = 416;
-    private static final boolean TF_OD_API_IS_QUANTIZED = true;
-    private static final String MODEL_FILE = "y4-10000.tflite";
+    private static final boolean TF_OD_API_IS_QUANTIZED = false;
+    private static final String MODEL_FILE = "yolov4-416.tflite";
     private static final String TF_OD_API_LABELS_FILE = "labelmap.txt";
     private static final DetectorMode MODE = DetectorMode.TF_OD_API;
     // Minimum detection confidence to track a detection.
@@ -410,11 +412,14 @@ public class ImageClassifier extends Service {
 
                                                 String imagePath = image.getImagePath();
                                                 System.out.println("Classifying image.....");
-                                                String label = classify(imagePath, interpreter, lala);
-//                                            System.out.println("Classification complete !");
-//                                            Date classificationTimestamp = new Date();
-//                                            Classification classification = new Classification(imagePath, label, classificationTimestamp);
-//                                            db.classificationDao().insert(classification);
+                                                List<String> labels = classify(imagePath, interpreter, lala);
+                                                for(String label: labels){
+                                                    System.out.println("Classification complete !");
+                                                    Date classificationTimestamp = new Date();
+                                                    Classification classification = new Classification(imagePath, label, classificationTimestamp);
+                                                    db.classificationDao().insert(classification);
+                                                }
+
                                             }
 
                                             isRunning = false;
@@ -516,7 +521,7 @@ public class ImageClassifier extends Service {
 //    }
 
 
-    public String classify(String filePath, Interpreter interpreter, String modelPath) {
+    public List<String> classify(String filePath, Interpreter interpreter, String modelPath) {
 
         int cropSize = TF_OD_API_INPUT_SIZE;
         try {
@@ -545,11 +550,15 @@ public class ImageClassifier extends Service {
 
         bitmap = Bitmap.createScaledBitmap(bitmap, 416, 416, true);
 
-        //reshape the image into 400*400
+        List<String> labels = new ArrayList<String>();
+
         if(detectors != null) {
             final List<Detector.Recognition> results = detectors.recognizeImage(bitmap);
             for (int i = 0; i<results.size(); i++){
                 Log.i("Member name: ", String.valueOf(results.get(i)));
+            }
+            for(int i = 0; i < results.size(); i++){
+                labels.add(results.get(i).getTitle());
             }
         }
 
@@ -562,12 +571,7 @@ public class ImageClassifier extends Service {
 //        paint.setStyle(Paint.Style.STROKE);
 //        paint.setStrokeWidth(2.0f);
 
-        float minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
-        switch (MODE) {
-            case TF_OD_API:
-                minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
-                break;
-        }
+
 
 //        final List<Detector.Recognition> mappedRecognitions =
 //                new ArrayList<Detector.Recognition>();
@@ -614,7 +618,7 @@ public class ImageClassifier extends Service {
 //        Recognition kuttaappi = getTopKProbability(labeledProbability);
 
 //        return kuttaappi.getTitle();
-        return "X";
+        return labels;
 //                                System.out.println("SIVANE ITH ETH JILLA");
     }
 
