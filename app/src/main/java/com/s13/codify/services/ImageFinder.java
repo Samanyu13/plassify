@@ -37,7 +37,7 @@ public class ImageFinder extends Service {
                 @Override
                 public void run() {
                     isRunning = true;
-                    Cursor cursor = null;
+//                    Cursor cursor = null;
                     try {
 
                         int column_index_data;
@@ -64,20 +64,23 @@ public class ImageFinder extends Service {
                             selectionArgs[0] = String.valueOf(dateToTimestamp(lastClassifiedTime));
                         }
                         String orderBy = "date_modified DESC";
-                        cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, orderBy);
-                        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                        String[] count = cursor.getColumnNames();
-                        while (cursor.moveToNext()) {
-                            absolutePathOfImage = cursor.getString(column_index_data);
-                            Images image = new Images(absolutePathOfImage);
-                            System.out.println("Inserting image");
-                            db.imagesDao().insert(image);
+                        try(Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, orderBy)) {
+                            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                            String[] count = cursor.getColumnNames();
+                            while (cursor.moveToNext()) {
+                                absolutePathOfImage = cursor.getString(column_index_data);
+                                Images image = new Images(absolutePathOfImage);
+                                System.out.println("Inserting image");
+                                db.imagesDao().insert(image);
+                            }
                         }
-                    } catch (Exception e) {
 
-                    } finally {
-                        cursor.close();
+                    } catch (Exception e) {
+                        System.out.println("Exception: --> " + e);
                     }
+//                    } finally {
+//                        cursor.close();
+//                    }
                     isRunning = false;
                 }
             });

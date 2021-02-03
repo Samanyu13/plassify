@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         FirebaseCustomRemoteModel remoteModel =
-                new FirebaseCustomRemoteModel.Builder("yolov4_tiny").build();
+                new FirebaseCustomRemoteModel.Builder("test").build();
         FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
                 .requireWifi()
                 .build();
@@ -79,13 +79,14 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         //Check permission
-        repo = new ModelClassesRepo(getApplication());
-        runImageFinder(this);
         if(ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
         }
+        repo = new ModelClassesRepo(getApplication());
+        runImageFinder(this);
+
 
         setContentView(R.layout.activity_main);
         dataList = findViewById(R.id.dataList);
